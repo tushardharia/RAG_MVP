@@ -1,13 +1,14 @@
 import uuid
 import chromadb
 from chromadb.utils.embedding_functions import SentenceTransformerEmbeddingFunction
+from config.settings import settings
 
 def initialize_chroma():
     # Initialize the Chroma client with persistence
-    chroma_client = chromadb.PersistentClient(path="chroma_persistent_storage")
-    collection_name = "document_collection"
+    chroma_client = chromadb.PersistentClient(path=str(settings.get_chroma_storage_path()))
+    collection_name = settings.CHROMA_COLLECTION_NAME
     collection = chroma_client.get_or_create_collection(
-        name=collection_name, embedding_function=SentenceTransformerEmbeddingFunction(model_name="all-MiniLM-L6-v2")
+        name=collection_name, embedding_function=SentenceTransformerEmbeddingFunction(model_name=settings.EMBEDDING_MODEL_NAME)
     )
     return collection
 
